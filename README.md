@@ -16,10 +16,11 @@ a = input()
 l=0
 d=0
 for i in a:
-    if i.isalpha():
+    if('a'<=i<='z') or ('A'<=i<='Z'):
         l+=1
-    if i.isdigit():
+    if ('0'<=i<='9'):
         d+=1
 print("LETTERS :", l)
 print("DIGITS :", d)
+
 ```
