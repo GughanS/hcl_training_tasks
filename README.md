@@ -1,3 +1,15 @@
+# Flipkart---Manual-test-case-template:
+```
+https://docs.google.com/spreadsheets/d/11g5LOQpyxJfM03wO-oPFp8xV3StFQpvsvFjo8dMeJ8Y/edit?usp=drivesdk
+```
+
+# HCLTECH - TASK: MANUAL TEST CASE TEMPLATE
+
+TEST CASE TEMPLATE LINK :
+```
+https://docs.google.com/spreadsheets/d/1Igx77bi24L69Ljnyu7CPcNf3Tx5I1EfK4whIPngK410/edit?usp=sharing
+```
+
 # hcl_training_tasks
 code 1:
 ```
@@ -24,11 +36,10 @@ print("LETTERS :", l)
 print("DIGITS :", d)
 
 ```
-# 25.09.2026
+# 25.09.2026 - python task
 
+1
 ```
-#1
-
 def longest_unique_sequence(arr):
     seen = set()
     left = 0
@@ -48,8 +59,10 @@ def longest_unique_sequence(arr):
 arr = [101, 102, 103, 101, 104, 105]
 
 print(longest_unique_sequence(arr))
+```
 
-#2
+2
+```
 def max_subarray_sum(arr):
     current = arr[0]
     maximum = arr[0]
@@ -64,8 +77,9 @@ def max_subarray_sum(arr):
 arr = [-2, 3, -1, 5, -6, 4]
 
 print(max_subarray_sum(arr))
-
-#3
+```
+3
+```
 def trap(height):
     left = 0
     right = len(height) - 1
@@ -98,8 +112,9 @@ def trap(height):
 
 
 print(trap([3, 0, 2, 0, 4]))
-
-#4
+```
+4
+```
 def max_performance(scores):
     current = scores[0]
     maximum = scores[0]
@@ -114,8 +129,9 @@ def max_performance(scores):
 scores = [-2, 5, -1, 6, -3, 2]
 
 print(max_performance(scores))
-
-#5
+```
+5
+```
 def max_product_subarray(arr):
 
     current_max = arr[0]
@@ -140,8 +156,9 @@ def max_product_subarray(arr):
 arr = [2, 3, -2, 4]
 
 print(max_product_subarray(arr))
-
-#6
+```
+6
+```
 def longest_unique_purchases(arr):
 
     seen = set()
@@ -164,8 +181,9 @@ def longest_unique_purchases(arr):
 arr = [10, 20, 30, 20, 40, 50]
 
 print(longest_unique_purchases(arr))
-
-#7
+```
+7
+```
 def count_subarrays(arr, target):
 
     prefix_sum = 0
@@ -191,8 +209,9 @@ arr = [1, 2, 3]
 target = 3
 
 print(count_subarrays(arr, target))
-
-#8
+```
+8
+```
 def group_anagrams(words):
 
     groups = {}
@@ -212,8 +231,9 @@ def group_anagrams(words):
 words = ["eat", "tea", "tan", "ate", "nat", "bat"]
 
 print(group_anagrams(words))
-
-#9
+```
+9
+```
 def longest_consecutive(arr):
 
     nums = set(arr)
@@ -221,7 +241,6 @@ def longest_consecutive(arr):
 
     for num in nums:
 
-        # Start of a sequence
         if num - 1 not in nums:
 
             current = num
@@ -239,8 +258,9 @@ def longest_consecutive(arr):
 arr = [100, 4, 200, 1, 3, 2]
 
 print(longest_consecutive(arr))
-
+```
 #10
+```
 def merge_intervals(intervals):
 
     if not intervals:
@@ -265,6 +285,6 @@ def merge_intervals(intervals):
 
 
 intervals = [[1, 3], [2, 6], [8, 10], [9, 12]]
-
 print(merge_intervals(intervals))
 ```
+
