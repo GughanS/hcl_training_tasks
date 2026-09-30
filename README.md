@@ -288,3 +288,5 @@ intervals = [[1, 3], [2, 6], [8, 10], [9, 12]]
 print(merge_intervals(intervals))
 ```
 
+# Assignment - 29.09.2026:
+https://colab.research.google.com/drive/1aouwyfAIV7bMYn_M7e_37d3SpmGCkwC2?usp=sharing
