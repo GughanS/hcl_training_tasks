@@ -1194,4 +1194,5 @@ class TestAdvancedXPathLocators:
         logger.info("Form submitted successfully using abstracted POM methods.")
         assert success_text == "Received!"
 ```
+<img width="1087" height="638" alt="image" src="https://github.com/user-attachments/assets/6946f9c0-7b43-4f25-95ac-f030b6285f66" />
 
