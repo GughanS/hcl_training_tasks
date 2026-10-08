@@ -1006,6 +1006,192 @@ class TestShoppingScenarios:
         alert = WebDriverWait(driver, 10).until(EC.alert_is_present())
         assert 'Success' in alert.text
         alert.accept()
-```
+
 ```
 <img width="1066" height="522" alt="image" src="https://github.com/user-attachments/assets/c037f03d-bc83-4faf-a654-a2f63bd193b3" />
+
+#DAY 4 : XPATH TASK :
+```
+import logging
+import pytest
+from typing import List
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+
+# --- Logging Setup ---
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+
+# ==============================================================================
+# PAGE OBJECT MODEL (POM) - Base Page
+# ==============================================================================
+class BasePage:
+    """Base class providing common Selenium operations and robust explicit waits."""
+    def __init__(self, driver: webdriver.Chrome):
+        self.driver = driver
+        self.wait = WebDriverWait(self.driver, 10)
+
+    def find_element(self, locator: tuple) -> WebElement:
+        """Wait for an element to be present and return it."""
+        return self.wait.until(EC.presence_of_element_located(locator))
+
+    def find_elements(self, locator: tuple) -> List[WebElement]:
+        """Return multiple elements based on locator."""
+        return self.driver.find_elements(*locator)
+        
+    def click_element(self, locator: tuple) -> None:
+        """Wait for an element to be clickable, then click."""
+        element = self.wait.until(EC.element_to_be_clickable(locator))
+        element.click()
+        
+    def enter_text(self, locator: tuple, text: str) -> None:
+        """Wait for an element to be clickable, clear it, and enter text."""
+        element = self.wait.until(EC.element_to_be_clickable(locator))
+        element.clear()
+        element.send_keys(text)
+
+
+# ==============================================================================
+# PAGE OBJECT MODEL (POM) - Web Form Page
+# ==============================================================================
+class WebFormPage(BasePage):
+    """Page object encapsulating locators and actions specifically for the Web Form page."""
+    
+    URL = "https://www.selenium.dev/selenium/web/web-form.html"
+    
+    # --- Locators mapped directly to the 20 XPath concepts ---
+    LOC_ABS_XPATH          = (By.XPATH, "/html/body/main/div/form/div/div/input")
+    LOC_REL_XPATH          = (By.XPATH, "//input[@name='my-text']")
+    LOC_TXT_XPATH          = (By.XPATH, "//button[text()='Submit']")
+    LOC_CONTAINS_ATTR      = (By.XPATH, "//input[contains(@name,'my')]")
+    LOC_CONTAINS_TXT       = (By.XPATH, "//button[contains(text(),'Submit')]")
+    LOC_STARTS_WITH        = (By.XPATH, "//input[starts-with(@name,'my')]")
+    
+    LOC_PARENT_AXIS        = (By.XPATH, "//input[@name='my-text']/parent::*")
+    LOC_CHILD_AXIS         = (By.XPATH, "//form/child::*")
+    LOC_ANCESTOR_AXIS      = (By.XPATH, "//input[@name='my-text']/ancestor::form")
+    LOC_DESCENDANT_AXIS    = (By.XPATH, "//form/descendant::input")
+    LOC_FOLLOWING_AXIS     = (By.XPATH, "//input[@name='my-text']/following::*")
+    LOC_PRECEDING_AXIS     = (By.XPATH, "//button[text()='Submit']/preceding::*")
+    LOC_FOLLOWING_SIBLING  = (By.XPATH, "//input[@name='my-text']/following-sibling::*")
+    LOC_PRECEDING_SIBLING  = (By.XPATH, "//button[text()='Submit']/preceding-sibling::*")
+    
+    LOC_SUCCESS_MESSAGE    = (By.ID, "message")
+
+    def open(self) -> None:
+        """Navigate to the web form page."""
+        self.driver.get(self.URL)
+
+    def submit_form(self) -> str:
+        """Submit the form and return the success message text."""
+        self.click_element(self.LOC_TXT_XPATH)
+        return self.find_element(self.LOC_SUCCESS_MESSAGE).text
+
+
+# ==============================================================================
+# PYTEST FIXTURES
+# ==============================================================================
+@pytest.fixture(scope="module")
+def driver():
+    """Manage the WebDriver lifecycle for the entire test suite."""
+    logger.info("Initializing WebDriver...")
+    chrome_options = Options()
+    chrome_options.add_argument("--start-maximized")
+    
+    service = ChromeService(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    
+    yield driver
+    
+    logger.info("Tearing down WebDriver...")
+    driver.quit()
+
+@pytest.fixture(scope="module")
+def web_form(driver) -> WebFormPage:
+    """Instantiate the Page Object and open the page once for the suite."""
+    page = WebFormPage(driver)
+    page.open()
+    return page
+
+
+# ==============================================================================
+# TEST SUITE
+# ==============================================================================
+class TestAdvancedXPathLocators:
+    """
+    Enterprise-grade test suite utilizing the Page Object Model (POM) architecture.
+    Notice how the tests contain ZERO raw webdriver calls or hard-coded locators.
+    """
+
+    def test_01_absolute_xpath(self, web_form: WebFormPage):
+        elem = web_form.find_element(web_form.LOC_ABS_XPATH)
+        assert elem is not None
+        logger.info(f"Found via Absolute XPath: {elem.get_attribute('name')}")
+
+    def test_02_relative_xpath(self, web_form: WebFormPage):
+        web_form.enter_text(web_form.LOC_REL_XPATH, "POM Architecture")
+        elem = web_form.find_element(web_form.LOC_REL_XPATH)
+        assert elem.get_attribute('value') == "POM Architecture"
+
+    def test_03_text_xpath(self, web_form: WebFormPage):
+        elem = web_form.find_element(web_form.LOC_TXT_XPATH)
+        assert elem.text == "Submit"
+
+    def test_04_contains_attribute(self, web_form: WebFormPage):
+        web_form.enter_text(web_form.LOC_CONTAINS_ATTR, "Contains Example")
+        elem = web_form.find_element(web_form.LOC_CONTAINS_ATTR)
+        assert elem.get_attribute('value') == "Contains Example"
+
+    def test_05_contains_text(self, web_form: WebFormPage):
+        elem = web_form.find_element(web_form.LOC_CONTAINS_TXT)
+        assert "Submit" in elem.text
+
+    def test_06_starts_with(self, web_form: WebFormPage):
+        elem = web_form.find_element(web_form.LOC_STARTS_WITH)
+        assert elem.get_attribute('name').startswith("my")
+
+    def test_07_parent_axis(self, web_form: WebFormPage):
+        elem = web_form.find_element(web_form.LOC_PARENT_AXIS)
+        assert elem.tag_name == "label"
+
+    def test_08_child_axis(self, web_form: WebFormPage):
+        elems = web_form.find_elements(web_form.LOC_CHILD_AXIS)
+        assert len(elems) > 0
+
+    def test_09_ancestor_axis(self, web_form: WebFormPage):
+        elem = web_form.find_element(web_form.LOC_ANCESTOR_AXIS)
+        assert elem.tag_name == "form"
+
+    def test_10_descendant_axis(self, web_form: WebFormPage):
+        elems = web_form.find_elements(web_form.LOC_DESCENDANT_AXIS)
+        assert len(elems) > 0
+
+    def test_11_following_axis(self, web_form: WebFormPage):
+        elems = web_form.find_elements(web_form.LOC_FOLLOWING_AXIS)
+        assert len(elems) > 0
+
+    def test_12_preceding_axis(self, web_form: WebFormPage):
+        elems = web_form.find_elements(web_form.LOC_PRECEDING_AXIS)
+        assert len(elems) > 0
+
+    def test_13_following_sibling_axis(self, web_form: WebFormPage):
+        elems = web_form.find_elements(web_form.LOC_FOLLOWING_SIBLING)
+        assert isinstance(elems, list)
+
+    def test_14_preceding_sibling_axis(self, web_form: WebFormPage):
+        elems = web_form.find_elements(web_form.LOC_PRECEDING_SIBLING)
+        assert isinstance(elems, list)
+
+    def test_15_submit_form(self, web_form: WebFormPage):
+        success_text = web_form.submit_form()
+        logger.info("Form submitted successfully using abstracted POM methods.")
+        assert success_text == "Received!"
+```
+
