@@ -1010,7 +1010,7 @@ class TestShoppingScenarios:
 ```
 <img width="1066" height="522" alt="image" src="https://github.com/user-attachments/assets/c037f03d-bc83-4faf-a654-a2f63bd193b3" />
 
-#DAY 4 : XPATH TASK :
+# DAY 4 : XPATH TASK :
 ```
 import logging
 import pytest
